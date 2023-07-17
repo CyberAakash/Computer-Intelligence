@@ -52,7 +52,7 @@ class Graph:
             current_f, current_node = heapq.heappop(open_set)
 
             if current_node == goal_node:
-                return self._reconstruct_path(goal_node, g_scores)
+                return self._reconstruct_path(goal_node, g_scores), g_scores[goal_node]
 
             closed_set.add(current_node)
 
@@ -66,7 +66,7 @@ class Graph:
                         if neighbor not in closed_set:
                             heapq.heappush(open_set, (f_scores[neighbor], neighbor))
 
-        return None
+        return None, float('inf')
 
     def _reconstruct_path(self, goal_node, g_scores):
         path = [goal_node]
@@ -104,17 +104,68 @@ def build_graph():
     return g
 
 
+def switch_case(graph):
+    while True:
+        print("\n----- Menu -----")
+        print("1. Add Node")
+        print("2. Add Edge")
+        print("3. Delete Node")
+        print("4. Delete Edge")
+        print("5. Print Graph")
+        print("6. Print Adjacency List")
+        print("7. A* Search")
+        print("8. Exit")
+
+        choice = int(input("Enter your choice: "))
+
+        if choice == 1:
+            node = input("Enter the node to add: ")
+            graph.add_node(node)
+            print(f"Node {node} added.")
+
+        elif choice == 2:
+            node1 = input("Enter the first node of the edge: ")
+            node2 = input("Enter the second node of the edge: ")
+            cost = int(input("Enter the cost of the edge: "))
+            graph.add_edge(node1, node2, cost)
+            print(f"Edge ({node1} -> {node2}) added with cost {cost}.")
+
+        elif choice == 3:
+            node = input("Enter the node to delete: ")
+            graph.delete_node(node)
+            print(f"Node {node} deleted.")
+
+        elif choice == 4:
+            node1 = input("Enter the first node of the edge to delete: ")
+            node2 = input("Enter the second node of the edge to delete: ")
+            graph.delete_edge(node1, node2)
+            print(f"Edge ({node1} -> {node2}) deleted.")
+
+        elif choice == 5:
+            print("Graph:")
+            graph.print_graph()
+
+        elif choice == 6:
+            print("Adjacency List:")
+            graph.print_adjacency_list()
+
+        elif choice == 7:
+            start_node = input("Enter the start node: ")
+            goal_node = input("Enter the goal node: ")
+            path, cost = graph.a_star_search(start_node, goal_node)
+            if path:
+                print(f"Shortest path from {start_node} to {goal_node}: {path}")
+                print(f"Cost: {cost}")
+            else:
+                print(f"No path found from {start_node} to {goal_node}")
+
+        elif choice == 8:
+            break
+
+        else:
+            print("Invalid choice. Please try again.")
+
+
 # Example usage:
 graph = build_graph()
-
-print("Graph:")
-graph.print_graph()
-
-start_node = input("Enter the start node: ")
-goal_node = input("Enter the goal node: ")
-
-path = graph.a_star_search(start_node, goal_node)
-if path:
-    print(f"Shortest path from {start_node} to {goal_node}: {path}")
-else:
-    print(f"No path found from {start_node} to {goal_node}")
+switch_case(graph)

@@ -8,22 +8,56 @@ class Graph:
         self.heuristics = {}
 
     def add_node(self, node):
-        self.nodes.add(node)
+        if node.strip():  # Check if node name is not empty or whitespace
+            node = node.split()[0]  # Consider only the part before space if present
+            if node not in self.nodes:
+                self.nodes.add(node)
+                return True  # Node added successfully
+            else:
+                print(f"Node '{node}' already exists.")
+        else:
+            print("Invalid node name.")
+
+        return False  # Node addition failed
 
     def add_edge(self, node1, node2, cost):
-        if node1 not in self.edges:
-            self.edges[node1] = {}
-        self.edges[node1][node2] = cost
+        node1 = node1.split()[0]  # Consider only the part before space if present
+        node2 = node2.split()[0]  # Consider only the part before space if present
+
+        if node1 == node2:
+            print("Node names in an edge cannot be the same.")
+            return False
+
+        if node1 in self.nodes and node2 in self.nodes:
+            if node1 not in self.edges:
+                self.edges[node1] = {}
+            self.edges[node1][node2] = cost
+            return True  # Edge added successfully
+        else:
+            print("One or both nodes do not exist.")
+
+        return False  # Edge addition failed
 
     def delete_node(self, node):
-        self.nodes.remove(node)
-        self.edges.pop(node, None)
-        for edge in self.edges.values():
-            edge.pop(node, None)
+        if node in self.nodes:
+            self.nodes.remove(node)
+            self.edges.pop(node, None)
+            for edge in self.edges.values():
+                edge.pop(node, None)
+            return True  # Node deleted successfully
+        else:
+            print(f"Node '{node}' does not exist.")
+
+        return False  # Node deletion failed
 
     def delete_edge(self, node1, node2):
         if node1 in self.edges and node2 in self.edges[node1]:
             del self.edges[node1][node2]
+            return True  # Edge deleted successfully
+        else:
+            print(f"Edge ({node1} -> {node2}) does not exist.")
+
+        return False  # Edge deletion failed
 
     def print_graph(self):
         for node in self.nodes:
@@ -41,6 +75,10 @@ class Graph:
                 print(f"{node}: {neighbor_list}")
 
     def a_star_search(self, start_node, goal_node):
+        if start_node not in self.nodes or goal_node not in self.nodes:
+            print("One or both of the nodes do not exist.")
+            return None, float('inf')
+
         open_set = [(0, start_node)]  # Priority queue: (f_score, node)
         closed_set = set()
         g_scores = {node: float('inf') for node in self.nodes}
@@ -93,13 +131,16 @@ def build_graph():
     num_nodes = int(input("Enter the number of nodes: "))
     for i in range(num_nodes):
         node = input(f"Enter node {i + 1}: ")
-        g.add_node(node)
+        while not g.add_node(node):
+            node = input("Enter a valid node name: ")
 
     num_edges = int(input("Enter the number of edges: "))
     for i in range(num_edges):
         edge = input(f"Enter edge {i + 1} (node1 node2 cost): ").split()
         node1, node2, cost = edge[0], edge[1], int(edge[2])
-        g.add_edge(node1, node2, cost)
+        while not g.add_edge(node1, node2, cost):
+            edge = input("Enter a valid edge: ").split()
+            node1, node2, cost = edge[0], edge[1], int(edge[2])
 
     return g
 
@@ -120,25 +161,29 @@ def switch_case(graph):
 
         if choice == 1:
             node = input("Enter the node to add: ")
-            graph.add_node(node)
+            while not graph.add_node(node):
+                node = input("Enter a valid node name: ")
             print(f"Node {node} added.")
 
         elif choice == 2:
-            node1 = input("Enter the first node of the edge: ")
-            node2 = input("Enter the second node of the edge: ")
-            cost = int(input("Enter the cost of the edge: "))
-            graph.add_edge(node1, node2, cost)
+            node1, node2, cost = input("Enter the edge (node1 node2 cost): ").split()
+            while not graph.add_edge(node1, node2, int(cost)):
+                print("Invalid edge.")
+                node1, node2, cost = input("Enter a valid edge (node1 node2 cost): ").split()
             print(f"Edge ({node1} -> {node2}) added with cost {cost}.")
 
         elif choice == 3:
             node = input("Enter the node to delete: ")
-            graph.delete_node(node)
+            while not graph.delete_node(node):
+                print(f"Node '{node}' does not exist.")
+                node = input("Enter a valid node name: ")
             print(f"Node {node} deleted.")
 
         elif choice == 4:
-            node1 = input("Enter the first node of the edge to delete: ")
-            node2 = input("Enter the second node of the edge to delete: ")
-            graph.delete_edge(node1, node2)
+            node1, node2 = input("Enter the edge to delete (node1 node2): ").split()
+            while not graph.delete_edge(node1, node2):
+                print(f"Edge ({node1} -> {node2}) does not exist.")
+                node1, node2 = input("Enter a valid edge to delete (node1 node2): ").split()
             print(f"Edge ({node1} -> {node2}) deleted.")
 
         elif choice == 5:

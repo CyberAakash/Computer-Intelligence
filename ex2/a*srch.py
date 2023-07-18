@@ -134,6 +134,9 @@ def build_graph():
         while not g.add_node(node):
             node = input("Enter a valid node name: ")
 
+        heuristic = int(input(f"Enter heuristic cost for node {node}: "))
+        g.heuristics[node] = heuristic
+
     num_edges = int(input("Enter the number of edges: "))
     for i in range(num_edges):
         edge = input(f"Enter edge {i + 1} (node1 node2 cost): ").split()
@@ -143,6 +146,7 @@ def build_graph():
             node1, node2, cost = edge[0], edge[1], int(edge[2])
 
     return g
+
 
 
 def switch_case(graph):
@@ -214,3 +218,16 @@ def switch_case(graph):
 # Example usage:
 graph = build_graph()
 switch_case(graph)
+
+
+
+
+
+
+
+
+
+
+
+
+

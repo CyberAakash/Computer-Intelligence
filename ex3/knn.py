@@ -6,6 +6,9 @@ def euclidean_distance(point1, point2):
     return np.sqrt(np.sum((point1 - point2) ** 2))
 
 
+
+
+sime cha
 def knn(train_data, test_point, k=3):
     distances = []
     for train_point in train_data:

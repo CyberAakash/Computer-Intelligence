@@ -1,0 +1,15 @@
+﻿student, age, income, credit_rating, buys_computer
+no     , let, high  , fair         , no
+no     , let, high  , excellent    , no
+no     , tf , high  , fair         , yes
+no     , gef, medium, fair         , yes
+yes    , gef, low   , fair         , yes
+yes    , gef, low   , excellent    , no
+yes    , tf , low   , excellent    , yes
+no     , let, medium, fair         , no
+yes    , let, low   , fair         , yes
+yes    , gtf, medium, fair         , yes
+yes    , let, medium, excellent    , yes
+no     , tf , high  , excellent    , yes
+yes    , tf , high  , fair         , yes
+no     , gtf, medium, excellent    , no
